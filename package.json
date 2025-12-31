@@ -1,6 +1,6 @@
 {
     "name": "geotic",
-    "version": "4.3.2",
+    "version": "5.0.0",
     "description": "entity-component-system",
     "main": "dist/index.js",
     "type": "module",
