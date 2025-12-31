@@ -1,6 +1,6 @@
 import { addBit, bitIntersection } from './util/bit-util.js';
 import type {World} from "./World";
-import type {Entity} from "./Entity";
+import type {Entity, EntityType} from "./Entity";
 import type {ComponentClass} from "./types/basic-types";
 
 type EntityListener = (entity: Entity) => void;
@@ -13,7 +13,7 @@ export type QueryFilter = {
 }
 
 export class Query {
-    _cache: Entity[] = [];
+    _cache: EntityType[] = [];
     _onAddListeners: EntityListener[] = [];
     _onRemoveListeners: EntityListener[] = [];
     _immutableResult = true;

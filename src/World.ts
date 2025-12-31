@@ -1,4 +1,4 @@
-import { Entity } from './Entity.js';
+import {Entity, type EntityType} from './Entity.js';
 import {Query, type QueryFilter} from './Query';
 import { camelString } from './util/string-util';
 import type {Engine} from "./Engine";
@@ -7,7 +7,7 @@ import type {EntityId, SerializedEntity} from "./types/basic-types";
 export class World {
     private _id = 0;
     private _queries: Query[] = [];
-    public _entities: Map<EntityId, Entity> = new Map();
+    public _entities: Map<EntityId, EntityType> = new Map();
 
     engine: Engine;
 
@@ -129,7 +129,7 @@ export class World {
         return entity;
     }
 
-    _candidate(entity: Entity) {
+    _candidate(entity: EntityType) {
         this._queries.forEach((q: Query) => q.candidate(entity));
     }
 

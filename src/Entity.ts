@@ -38,6 +38,7 @@ const attachComponentArray = (entity: EntityType, component: Component) => {
 };
 
 const removeComponent = (entity: EntityType, component: Component) => {
+    component._onBeforeDestroyed(entity)
     const key = component._ckey;
 
     delete entity[key];
@@ -48,6 +49,7 @@ const removeComponent = (entity: EntityType, component: Component) => {
 };
 
 const removeComponentKeyed = (entity: EntityType, component: ComponentType) => {
+    component._onBeforeDestroyed(entity)
     const key = component._ckey;
     const keyProp = component[component.keyProperty];
 
@@ -64,6 +66,7 @@ const removeComponentKeyed = (entity: EntityType, component: ComponentType) => {
 };
 
 const removeComponentArray = (entity: EntityType, component: Component) => {
+    component._onBeforeDestroyed(entity)
     const key = component._ckey;
     const idx = entity[key].indexOf(component);
 
@@ -156,6 +159,22 @@ export class Entity {
     }
 
     destroy() {
+        for (const k in this.components) {
+            const v = this.components[k];
+
+            if (v instanceof Component) {
+                v._onBeforeDestroyed(this)
+            } else if (v instanceof Array) {
+                for (const component of v) {
+                    component._onBeforeDestroyed(this)
+                }
+            } else {
+                for (const component of Object.values(v)) {
+                    component._onBeforeDestroyed(this)
+                }
+            }
+        }
+
         for (const k in this.components) {
             const v = this.components[k];
 

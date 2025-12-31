@@ -41,6 +41,15 @@ export class Component {
         delete this.entity;
     }
 
+    /**
+     * Called *before* the component is destroyed, and can be used for cleanup
+     * in places where you still need all the entity links intact.
+     * @param entity
+     */
+    _onBeforeDestroyed(entity: Entity) {
+        this.onBeforeDestroyed(entity)
+    }
+
     _onEvent<T>(evt: EntityEvent<T>) {
         this.onEvent(evt);
 
@@ -66,6 +75,7 @@ export class Component {
     }
 
     onAttached(entity: Entity) {}
+    onBeforeDestroyed(entity: Entity) {}
     onDestroyed() {}
     onEvent<T>(evt: EntityEvent<T>) {}
 }
