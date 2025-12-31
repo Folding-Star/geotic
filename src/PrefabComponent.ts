@@ -1,13 +1,18 @@
 import merge from 'deepmerge';
+import type {ComponentClass, ComponentProperties} from "./types/basic-types";
+import type {Entity, EntityType} from "./Entity";
 
 export default class PrefabComponent {
-    constructor(clazz, properties = {}, overwrite = true) {
+    clazz: ComponentClass
+    properties: ComponentProperties
+    overwrite: boolean
+    constructor(clazz: ComponentClass, properties = {}, overwrite = true) {
         this.clazz = clazz;
         this.properties = properties;
         this.overwrite = overwrite;
     }
 
-    applyToEntity(entity, initialProps = {}) {
+    applyToEntity(entity: EntityType, initialProps = {}) {
         if (!this.clazz.allowMultiple && entity.has(this.clazz)) {
             if (!this.overwrite) {
                 return;

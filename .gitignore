@@ -1,4 +1,6 @@
 npm-debug.log
 node_modules
+bin
 build
+dist
 .DS_Store

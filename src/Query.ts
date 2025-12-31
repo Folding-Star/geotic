@@ -1,27 +1,44 @@
-import { addBit, bitIntersection } from './util/bit-util';
+import { addBit, bitIntersection } from './util/bit-util.js';
+import type {World} from "./World";
+import type {Entity} from "./Entity";
+import type {ComponentClass} from "./types/basic-types";
+
+type EntityListener = (entity: Entity) => void;
+
+export type QueryFilter = {
+    all: ComponentClass[],
+    any: ComponentClass[],
+    none: ComponentClass[],
+    immutableResult?: boolean
+}
 
 export class Query {
-    _cache = [];
-    _onAddListeners = [];
-    _onRemoveListeners = [];
+    _cache: Entity[] = [];
+    _onAddListeners: EntityListener[] = [];
+    _onRemoveListeners: EntityListener[] = [];
     _immutableResult = true;
 
-    constructor(world, filters) {
+    _world: World
+    _any
+    _all
+    _none
+
+    constructor(world: World, filters: QueryFilter) {
         this._world = world;
 
         const any = filters.any || [];
         const all = filters.all || [];
         const none = filters.none || [];
 
-        this._any = any.reduce((s, c) => {
+        this._any = any.reduce((s: bigint, c) => {
             return addBit(s, c.prototype._cbit);
         }, 0n);
 
-        this._all = all.reduce((s, c) => {
+        this._all = all.reduce((s: bigint, c) => {
             return addBit(s, c.prototype._cbit);
         }, 0n);
 
-        this._none = none.reduce((s, c) => {
+        this._none = none.reduce((s: bigint, c) => {
             return addBit(s, c.prototype._cbit);
         }, 0n);
 
@@ -33,23 +50,23 @@ export class Query {
         this.refresh();
     }
 
-    onEntityAdded(fn) {
+    onEntityAdded(fn: EntityListener) {
         this._onAddListeners.push(fn);
     }
 
-    onEntityRemoved(fn) {
+    onEntityRemoved(fn: EntityListener) {
         this._onRemoveListeners.push(fn);
     }
 
-    has(entity) {
+    has(entity: Entity) {
         return this.idx(entity) >= 0;
     }
 
-    idx(entity) {
+    idx(entity: Entity) {
         return this._cache.indexOf(entity);
     }
 
-    matches(entity) {
+    matches(entity: Entity) {
         const bits = entity._cbits;
 
         const any = this._any === 0n || bitIntersection(bits, this._any) > 0;
@@ -59,7 +76,7 @@ export class Query {
         return any && all && none;
     }
 
-    candidate(entity) {
+    candidate(entity: Entity) {
         const idx = this.idx(entity);
         const isTracking = idx >= 0;
 

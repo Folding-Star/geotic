@@ -6,7 +6,7 @@ import Action from './components/Action';
 import BeingPrefab from './prefabs/BeingPrefab';
 import HumanPrefab from './prefabs/HumanPrefab';
 import EquipmentSlot from './components/EquipmentSlot';
-import { Engine } from '../src/index';
+import { Engine } from '../src/index.js';
 
 const ecs = new Engine();
 const world = ecs.createWorld();

@@ -1,4 +1,4 @@
-import { Component } from '../../src/index';
+import { Component } from '../../src/index.js';
 
 export default class Material extends Component {
     static properties = {

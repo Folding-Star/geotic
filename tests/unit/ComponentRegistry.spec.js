@@ -1,5 +1,5 @@
-import { Engine } from '../../src/index';
-import { ComponentRegistry } from '../../src/ComponentRegistry';
+import { Engine } from '../../bin/index.js';
+import { ComponentRegistry } from '../../bin/ComponentRegistry.js';
 import { EmptyComponent } from '../data/components';
 
 describe('ComponentRegistry', () => {

@@ -1,5 +1,5 @@
-import { Engine } from './src/Engine';
-import { Component } from './src/Component';
+import { Engine } from './bin/Engine.js';
+import { Component } from './bin/Component.js';
 
 class ComponentA extends Component {
     static allowMultiple = true;

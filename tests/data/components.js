@@ -1,4 +1,4 @@
-import { Component } from '../../src/index';
+import { Component } from '../../bin/index.js';
 
 export class EmptyComponent extends Component {}
 
@@ -14,10 +14,6 @@ export class NestedComponent extends Component {
     static properties = {
         name: 'test',
         hello: 'world',
-        obprop: {
-            key: 'value',
-            arr: [1, 2, 3],
-        },
     };
 }
 

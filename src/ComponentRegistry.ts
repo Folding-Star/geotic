@@ -1,10 +1,11 @@
 import { camelString } from './util/string-util';
+import type {ComponentClass} from "./types/basic-types";
 
 export class ComponentRegistry {
     _cbit = 0;
-    _map = {};
+    _map: Record<string, ComponentClass> = {};
 
-    register(clazz) {
+    register(clazz: ComponentClass) {
         const key = camelString(clazz.name);
 
         clazz.prototype._ckey = key;
@@ -13,7 +14,7 @@ export class ComponentRegistry {
         this._map[key] = clazz;
     }
 
-    get(key) {
+    get(key: string) {
         return this._map[key];
     }
 }

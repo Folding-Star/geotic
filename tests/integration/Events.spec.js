@@ -1,4 +1,4 @@
-import { Engine, Component } from '../../src/index';
+import { Engine, Component } from '../../bin/index.js';
 import { EmptyComponent } from '../data/components';
 
 describe('Events', () => {

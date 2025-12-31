@@ -1,26 +1,29 @@
+import type {Entity} from "./Entity";
+import type PrefabComponent from "./PrefabComponent";
+
 export default class Prefab {
     name = '';
-    inherit = [];
-    components = [];
+    inherit: Prefab[] = [];
+    components: PrefabComponent[] = [];
 
-    constructor(name) {
+    constructor(name: string) {
         this.name = name;
     }
 
-    addComponent(prefabComponent) {
+    addComponent(prefabComponent: PrefabComponent) {
         this.components.push(prefabComponent);
     }
 
-    applyToEntity(entity, prefabProps = {}) {
+    applyToEntity(entity: Entity, prefabProps: any = {}) {
         this.inherit.forEach((parent) => {
             parent.applyToEntity(entity, prefabProps);
         });
 
-        const arrComps = {};
+        const arrComps: any = {};
 
         this.components.forEach((component) => {
             const clazz = component.clazz;
-            const ckey = clazz.prototype._ckey;
+            const ckey: string = clazz.prototype._ckey;
 
             let initialCompProps = {};
 

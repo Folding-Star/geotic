@@ -1,4 +1,4 @@
-import { Engine, Component } from '../../src/index';
+import { Engine, Component } from '../../bin/index.js';
 
 describe('Query', () => {
     let world, entityA, entityB, result, query, onAddCallback, onRemoveCallback;

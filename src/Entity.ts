@@ -1,15 +1,19 @@
-import { Component } from './Component';
-import { EntityEvent } from './EntityEvent';
+import {Component, type ComponentType} from './Component';
+import { EntityEvent } from './EntityEvent.js';
 import { addBit, hasBit, subtractBit } from './util/bit-util';
+import type {World} from "./World";
+import type {ComponentClass, ComponentProperties, EntityId, SerializedEntity} from "./types/basic-types";
 
-const attachComponent = (entity, component) => {
+export type EntityType = Entity & Record<string, any>
+
+const attachComponent = (entity: EntityType, component: Component) => {
     const key = component._ckey;
 
     entity[key] = component;
     entity.components[key] = component;
 };
 
-const attachComponentKeyed = (entity, component) => {
+const attachComponentKeyed = (entity: EntityType, component: ComponentType) => {
     const key = component._ckey;
 
     if (!entity.components[key]) {
@@ -18,10 +22,10 @@ const attachComponentKeyed = (entity, component) => {
     }
 
     entity[key][component[component.keyProperty]] = component;
-    entity.components[key][component[component.keyProperty]] = component;
+    (entity.components[key] as { [key: string]: Component })[component[component.keyProperty]] = component;
 };
 
-const attachComponentArray = (entity, component) => {
+const attachComponentArray = (entity: EntityType, component: Component) => {
     const key = component._ckey;
 
     if (!entity.components[key]) {
@@ -30,10 +34,10 @@ const attachComponentArray = (entity, component) => {
     }
 
     entity[key].push(component);
-    entity.components[key].push(component);
+    (entity.components[key] as Component[]).push(component);
 };
 
-const removeComponent = (entity, component) => {
+const removeComponent = (entity: EntityType, component: Component) => {
     const key = component._ckey;
 
     delete entity[key];
@@ -43,12 +47,13 @@ const removeComponent = (entity, component) => {
     entity._candidacy();
 };
 
-const removeComponentKeyed = (entity, component) => {
+const removeComponentKeyed = (entity: EntityType, component: ComponentType) => {
     const key = component._ckey;
     const keyProp = component[component.keyProperty];
 
     delete entity[key][keyProp];
-    delete entity.components[key][keyProp];
+    const examinedComponents = entity.components[key] as { [key: string]: Component };
+    delete examinedComponents[keyProp];
 
     if (Object.keys(entity[key]).length <= 0) {
         delete entity[key];
@@ -58,12 +63,16 @@ const removeComponentKeyed = (entity, component) => {
     }
 };
 
-const removeComponentArray = (entity, component) => {
+const removeComponentArray = (entity: EntityType, component: Component) => {
     const key = component._ckey;
     const idx = entity[key].indexOf(component);
 
     entity[key].splice(idx, 1);
-    entity.components[key].splice(idx, 1);
+    const examinedComponents = entity.components[key]
+    if (!Array.isArray(examinedComponents)) {
+        throw new Error("Components are not in an arary.")
+    }
+    examinedComponents.splice(idx, 1);
 
     if (entity[key].length <= 0) {
         delete entity[key];
@@ -73,16 +82,16 @@ const removeComponentArray = (entity, component) => {
     }
 };
 
-const serializeComponent = (component) => {
+const serializeComponent = (component: Component) => {
     return component.serialize();
 };
 
-const serializeComponentArray = (arr) => {
+const serializeComponentArray = (arr: Component[]) => {
     return arr.map(serializeComponent);
 };
 
-const serializeComponentKeyed = (ob) => {
-    const ser = {};
+const serializeComponentKeyed = (ob: { [key: string]: Component }) => {
+    const ser: ComponentProperties = {};
 
     for (const k in ob) {
         ser[k] = serializeComponent(ob[k]);
@@ -92,10 +101,15 @@ const serializeComponentKeyed = (ob) => {
 };
 
 export class Entity {
-    _cbits = 0n;
-    _qeligible = true;
+    public _cbits: bigint = 0n;
+    public _qeligible = true;
 
-    constructor(world, id) {
+    world: World
+    id: EntityId
+    components: Record<string, Component | { [key: string] : Component } | Component[]>
+    isDestroyed: boolean = false;
+
+    constructor(world: World, id: EntityId) {
         this.world = world;
         this.id = id;
         this.components = {};
@@ -108,7 +122,7 @@ export class Entity {
         }
     }
 
-    add(clazz, properties) {
+    add(clazz: ComponentClass, properties: ComponentProperties) {
         const component = new clazz(properties);
 
         if (component.keyProperty) {
@@ -125,11 +139,11 @@ export class Entity {
         this._candidacy();
     }
 
-    has(clazz) {
+    has(clazz: ComponentClass): boolean {
         return hasBit(this._cbits, clazz.prototype._cbit);
     }
 
-    remove(component) {
+    remove(component: Component) {
         if (component.keyProperty) {
             removeComponentKeyed(this, component);
         } else if (component.allowMultiple) {
@@ -160,7 +174,7 @@ export class Entity {
                 }
             }
 
-            delete this[k];
+            delete (this as EntityType)[k];
             delete this.components[k];
         }
 
@@ -170,8 +184,8 @@ export class Entity {
         this.isDestroyed = true;
     }
 
-    serialize() {
-        const components = {};
+    serialize(): SerializedEntity {
+        const components: ComponentProperties | ComponentProperties[] = {};
 
         for (const k in this.components) {
             const v = this.components[k];
@@ -186,8 +200,9 @@ export class Entity {
         }
 
         return {
-            id: this.id,
+
             ...components,
+            id: this.id,
         };
     }
 
@@ -195,8 +210,8 @@ export class Entity {
         return this.world.cloneEntity(this);
     }
 
-    fireEvent(name, data) {
-        const evt = new EntityEvent(name, data);
+    fireEvent<T>(name: string, data: T) {
+        const evt = new EntityEvent<T>(name, data);
 
         for (const key in this.components) {
             const v = this.components[key];

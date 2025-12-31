@@ -1,6 +1,6 @@
-import { Engine } from '../../src/Engine';
+import { Engine } from '../../bin/Engine.js';
 import { EmptyComponent } from '../data/components';
-import { Component } from '../../src/Component';
+import { Component } from '../../bin/Component.js';
 
 describe('Entity', () => {
     let world;

@@ -1,16 +1,20 @@
-import PrefabComponent from './PrefabComponent';
-import Prefab from './Prefab';
-import { camelString } from './util/string-util';
+import PrefabComponent from './PrefabComponent.js';
+import Prefab from './Prefab.js';
+import { camelString } from './util/string-util.js';
+import type {Engine} from "./Engine";
+import type {World} from "./World";
+
+export type SerializedPrefabData = { name: string, inherit: string[], components: (string | {properties: any, overwrite: any, type: string} )[] }
 
 export class PrefabRegistry {
-    _prefabs = {};
-    _engine = null;
+    _prefabs: Record<string, Prefab> = {};
+    _engine: Engine;
 
-    constructor(engine) {
+    constructor(engine: Engine) {
         this._engine = engine;
     }
 
-    deserialize(data) {
+    deserialize(data: SerializedPrefabData) {
         const registered = this.get(data.name);
 
         if (registered) {
@@ -19,7 +23,7 @@ export class PrefabRegistry {
 
         const prefab = new Prefab(data.name);
 
-        let inherit;
+        let inherit: string[] = [];
 
         if (Array.isArray(data.inherit)) {
             inherit = data.inherit;
@@ -33,14 +37,13 @@ export class PrefabRegistry {
             const ref = this.get(parent);
 
             if (!ref) {
-                console.warn(
+                throw new Error(
                     `Prefab "${data.name}" cannot inherit from Prefab "${parent}" because is not registered yet! Prefabs must be registered in the right order.`
                 );
-                return parent;
             }
 
             return ref;
-        });
+        })
 
         const comps = data.components || [];
 
@@ -88,17 +91,17 @@ export class PrefabRegistry {
         return prefab;
     }
 
-    register(data) {
+    register(data: SerializedPrefabData) {
         const prefab = this.deserialize(data);
 
         this._prefabs[prefab.name] = prefab;
     }
 
-    get(name) {
+    get(name: string) {
         return this._prefabs[name];
     }
 
-    create(world, name, properties = {}) {
+    create(world: World, name: string, properties = {}) {
         const prefab = this.get(name);
 
         if (!prefab) {

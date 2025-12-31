@@ -1,4 +1,4 @@
-import { Engine } from '../../src/Engine';
+import { Engine } from '../../bin/Engine.js';
 import {
     EmptyComponent,
     SimpleComponent,

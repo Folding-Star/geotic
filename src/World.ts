@@ -1,13 +1,17 @@
-import { Entity } from './Entity';
-import { Query } from './Query';
+import { Entity } from './Entity.js';
+import {Query, type QueryFilter} from './Query';
 import { camelString } from './util/string-util';
+import type {Engine} from "./Engine";
+import type {EntityId, SerializedEntity} from "./types/basic-types";
 
 export class World {
-    _id = 0;
-    _queries = [];
-    _entities = new Map();
+    private _id = 0;
+    private _queries: Query[] = [];
+    public _entities: Map<EntityId, Entity> = new Map();
 
-    constructor(engine) {
+    engine: Engine;
+
+    constructor(engine: Engine) {
         this.engine = engine;
     }
 
@@ -15,7 +19,7 @@ export class World {
         return ++this._id + Math.random().toString(36).substr(2, 9);
     }
 
-    getEntity(id) {
+    getEntity(id: EntityId) {
         return this._entities.get(id);
     }
 
@@ -31,7 +35,7 @@ export class World {
         return entity;
     }
 
-    destroyEntity(id) {
+    destroyEntity(id: EntityId) {
         const entity = this.getEntity(id);
 
         if (entity) {
@@ -52,7 +56,7 @@ export class World {
         this._entities = new Map();
     }
 
-    createQuery(filters) {
+    createQuery(filters: QueryFilter) {
         const query = new Query(this, filters);
 
         this._queries.push(query);
@@ -60,12 +64,12 @@ export class World {
         return query;
     }
 
-    createPrefab(name, properties = {}) {
+    createPrefab(name: string, properties = {}) {
         return this.engine._prefabs.create(this, name, properties);
     }
 
-    serialize(entities) {
-        const json = [];
+    serialize(entities: Entity[]) {
+        const json: SerializedEntity[] = [];
         const list = entities || this._entities;
 
         list.forEach((e) => {
@@ -77,7 +81,7 @@ export class World {
         };
     }
 
-    cloneEntity(entity) {
+    cloneEntity(entity: Entity) {
         const data = entity.serialize();
 
         data.id = this.createId();
@@ -85,7 +89,7 @@ export class World {
         return this._deserializeEntity(data);
     }
 
-    deserialize(data) {
+    deserialize(data: {entities: SerializedEntity[]}) {
         for (const entityData of data.entities) {
             this._createOrGetEntityById(entityData.id);
         }
@@ -95,11 +99,11 @@ export class World {
         }
     }
 
-    _createOrGetEntityById(id) {
+    _createOrGetEntityById(id: EntityId) {
         return this.getEntity(id) || this.createEntity(id);
     }
 
-    _deserializeEntity(data) {
+    _deserializeEntity(data: SerializedEntity ) {
         const { id, ...components } = data;
         const entity = this._createOrGetEntityById(id);
         entity._qeligible = false;
@@ -113,7 +117,9 @@ export class World {
                     entity.add(def, d);
                 });
             } else {
-                entity.add(def, value);
+                if (typeof value !== "string") {
+                    entity.add(def, value);
+                }
             }
         });
 
@@ -123,11 +129,11 @@ export class World {
         return entity;
     }
 
-    _candidate(entity) {
-        this._queries.forEach((q) => q.candidate(entity));
+    _candidate(entity: Entity) {
+        this._queries.forEach((q: Query) => q.candidate(entity));
     }
 
-    _destroyed(id) {
+    _destroyed(id: EntityId) {
         return this._entities.delete(id);
     }
 }

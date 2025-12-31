@@ -1,5 +1,5 @@
-import { Engine } from '../../src/Engine';
-import { World } from '../../src/World';
+import { Engine } from '../../bin/Engine.js';
+import { World } from '../../bin/World.js';
 
 describe('Engine', () => {
     let engine;

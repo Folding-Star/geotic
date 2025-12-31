@@ -1,5 +1,5 @@
-import { Engine, Component } from '../../src/index';
-import { bitIntersection } from '../../src/util/bit-util';
+import { Engine, Component } from '../../bin/index.js';
+import { bitIntersection } from '../../bin/util/bit-util.js';
 
 describe('Query', () => {
     let world, entity, result, query;

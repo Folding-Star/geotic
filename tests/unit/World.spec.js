@@ -1,4 +1,4 @@
-import { Engine } from '../../src/index';
+import { Engine } from '../../bin/index.js';
 
 describe('World', () => {
     let world;

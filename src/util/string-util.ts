@@ -1,8 +1,8 @@
 import camelcaseSlow from 'camelcase';
 
-const camelCache = {};
+const camelCache: { [key: string]: string } = {};
 
-export const camelString = (value) => {
+export const camelString = (value: string) => {
     const result = camelCache[value];
 
     if (!result) {
