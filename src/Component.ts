@@ -1,5 +1,5 @@
 import { deepClone } from './util/deep-clone';
-import type {Entity} from "./Entity";
+import type {EntityType} from "./Entity";
 import type {ComponentProperties} from "./types/basic-types";
 import type {EntityEvent} from "./EntityEvent";
 
@@ -10,7 +10,7 @@ export class Component {
     static keyProperty: string | null = null;
     static properties: ComponentProperties = {};
 
-    entity?: Entity
+    entity?: EntityType
     _ckey!: string
     _cbit!: bigint
 
@@ -46,7 +46,7 @@ export class Component {
      * in places where you still need all the entity links intact.
      * @param entity
      */
-    _onBeforeDestroyed(entity: Entity) {
+    _onBeforeDestroyed(entity: EntityType) {
         this.onBeforeDestroyed(entity)
     }
 
@@ -58,7 +58,7 @@ export class Component {
         }
     }
 
-    _onAttached(entity: Entity) {
+    _onAttached(entity: EntityType) {
         this.entity = entity;
         this.onAttached(entity);
     }
@@ -74,8 +74,8 @@ export class Component {
         return deepClone(ob);
     }
 
-    onAttached(entity: Entity) {}
-    onBeforeDestroyed(entity: Entity) {}
+    onAttached(entity: EntityType) {}
+    onBeforeDestroyed(entity: EntityType) {}
     onDestroyed() {}
     onEvent<T>(evt: EntityEvent<T>) {}
 }

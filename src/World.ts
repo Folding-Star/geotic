@@ -1,4 +1,4 @@
-import {Entity, type EntityType} from './Entity.js';
+import {Entity, type EntityType} from './Entity';
 import {Query, type QueryFilter} from './Query';
 import { camelString } from './util/string-util';
 import type {Engine} from "./Engine";
@@ -27,7 +27,7 @@ export class World {
         return this._entities.values();
     }
 
-    createEntity(id = this.createId()) {
+    createEntity(id = this.createId()): EntityType {
         const entity = new Entity(this, id);
 
         this._entities.set(id, entity);

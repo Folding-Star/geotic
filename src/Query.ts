@@ -6,9 +6,9 @@ import type {ComponentClass} from "./types/basic-types";
 type EntityListener = (entity: Entity) => void;
 
 export type QueryFilter = {
-    all: ComponentClass[],
-    any: ComponentClass[],
-    none: ComponentClass[],
+    all?: ComponentClass[],
+    any?: ComponentClass[],
+    none?: ComponentClass[],
     immutableResult?: boolean
 }
 

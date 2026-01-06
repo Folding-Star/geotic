@@ -125,7 +125,7 @@ export class Entity {
         }
     }
 
-    add(clazz: ComponentClass, properties: ComponentProperties) {
+    add(clazz: ComponentClass, properties?: ComponentProperties) {
         const component = new clazz(properties);
 
         if (component.keyProperty) {
