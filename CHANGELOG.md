@@ -1,3 +1,8 @@
+# v5.0.1
+
+* Expose more types in the main `geotic` export, including an `EntityType` that explicitly allows top-level component access, and `SerializedEntity`
+* Add a `get` function to `Entity` to retrieve components by their class. This was added so that IDEs can more easily generate working code when renaming components.
+
 # v5.0.0
 
 New major version to distinguish from the parent.
