@@ -542,3 +542,21 @@ const warrior2 = world.createPrefab('HumanWarrior', {
     },
 });
 ```
+
+### typescript usage
+
+This package is a fork of the original `geotic` that converts the logic to typescript and adds some additional helper functions. See `CHANGELOG.md` for a full list of those changes.
+
+When using with Typescript, you must ensure that your `tsconfig.json` has the following parameter:
+
+```json
+{
+  "compilerOptions": {
+    ...
+    "useDefineForClassFields": false,
+    ...
+  }
+}
+```
+
+If `useDefineForClassFields` is set to `true`, you _will_ wipe out any initial properties when creating components.
