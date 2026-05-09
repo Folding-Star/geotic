@@ -68,7 +68,7 @@ export class World {
         return this.engine._prefabs.create(this, name, properties);
     }
 
-    serialize(entities: Entity[]) {
+    serialize(entities?: Entity[]) {
         const json: SerializedEntity[] = [];
         const list = entities || this._entities;
 

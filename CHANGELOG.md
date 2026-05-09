@@ -1,3 +1,7 @@
+# v5.0.2
+
+* Fix an erroneous Typescript signature for `world.serialize`
+
 # v5.0.1
 
 * Expose more types in the main `geotic` export, including an `EntityType` that explicitly allows top-level component access, and `SerializedEntity`
