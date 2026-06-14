@@ -1,3 +1,7 @@
+# v5.0.3
+
+* Export `ComponentClass` type
+
 # v5.0.2
 
 * Fix an erroneous Typescript signature for `world.serialize`
