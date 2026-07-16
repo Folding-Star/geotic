@@ -1,6 +1,6 @@
 import { ComponentRegistry } from './ComponentRegistry';
 import {PrefabRegistry, type SerializedPrefabData} from './PrefabRegistry';
-import { World } from './World.js';
+import { World } from './World';
 import type {ComponentClass} from "./types/basic-types";
 
 export class Engine {

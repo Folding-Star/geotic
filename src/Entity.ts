@@ -1,5 +1,5 @@
 import {Component, type ComponentType} from './Component';
-import {EntityEvent} from './EntityEvent.js';
+import {EntityEvent} from './EntityEvent';
 import {addBit, hasBit, subtractBit} from './util/bit-util';
 import type {World} from "./World";
 import type {ComponentClass, ComponentProperties, EntityId, SerializedEntity} from "./types/basic-types";

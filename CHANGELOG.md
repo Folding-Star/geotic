@@ -1,3 +1,7 @@
+# v5.0.4
+
+* Fix some typings so that the types file doesn't attempt to import .js files
+
 # v5.0.3
 
 * Export `ComponentClass` type
@@ -23,4 +27,3 @@ New major version to distinguish from the parent.
 # v4.3.2
 
 This is the original version of `geotic` forked from https://github.com/ddmills/geotic.
-

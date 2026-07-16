@@ -1,8 +1,9 @@
 import PrefabComponent from './PrefabComponent.js';
-import Prefab from './Prefab.js';
+import Prefab from './Prefab';
 import { camelString } from './util/string-util.js';
 import type {Engine} from "./Engine";
 import type {World} from "./World";
+import type { EntityType } from './Entity';
 
 export type SerializedPrefabData = { name: string, inherit: string[], components: (string | {properties: any, overwrite: any, type: string} )[] }
 
@@ -101,7 +102,7 @@ export class PrefabRegistry {
         return this._prefabs[name];
     }
 
-    create(world: World, name: string, properties = {}) {
+    create(world: World, name: string, properties = {}): EntityType | undefined {
         const prefab = this.get(name);
 
         if (!prefab) {
