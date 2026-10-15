@@ -26,10 +26,10 @@ export class Component {
         return (this.constructor as unknown as Component).keyProperty;
     }
 
-    constructor(properties: ComponentProperties = {}) {
-        const intrinsics = deepClone((this.constructor as any).properties);
-
-        Object.assign(this, intrinsics, properties);
+    constructor() {
+        // see Entity.add for how component properties are added upon creation.
+        // Unfortunately, we can't do so in the constructor because of JS's
+        // class property initialization order.
     }
 
     destroy() {

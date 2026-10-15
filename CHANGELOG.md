@@ -1,3 +1,8 @@
+# v5.0.5
+
+* Fixed an issue where properties can be initialized to `undefined` in ES2022 and beyond because of how class member variable order works
+* Updated `.prettierrc` to more clearly state that this repository is formatted with spaces (needed because my IDE defaults to tabs, save for this project.)
+
 # v5.0.4
 
 * Fix some typings so that the types file doesn't attempt to import .js files
