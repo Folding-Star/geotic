@@ -1,7 +1,9 @@
 import type {Component} from "../Component";
 
 export type ComponentProperties = { [key: string]: any };
-export type ComponentClass = (new () => Component) & {
+export type ComponentClass = (new (
+    properties?: ComponentProperties
+) => Component) & {
     properties?: ComponentProperties;
     allowMultiple: boolean;
     keyProperty: string | null;

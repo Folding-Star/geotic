@@ -127,7 +127,7 @@ export class Entity {
     }
 
     add(clazz: ComponentClass, properties?: ComponentProperties) {
-        const component = new clazz();
+        const component = new clazz(properties);
         const intrinsics = deepClone(clazz.properties);
         Object.assign(component, intrinsics, properties);
 

@@ -1,3 +1,8 @@
+# v5.0.6
+
+* Fast-follow on v5.0.5 to revert an accidental API change that removed the properties object from Component constructor
+* This now re-constructs the properties on the object so that inherited objects can manipulate the other elements from the constructor.
+
 # v5.0.5
 
 * Fixed an issue where properties can be initialized to `undefined` in ES2022 and beyond because of how class member variable order works
